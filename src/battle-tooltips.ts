@@ -1969,9 +1969,9 @@ class BattleStatGuesser {
 	supportsEVs: boolean;
 	supportsAVs: boolean;
 
-	constructor(formatid: ID) {
+	constructor(formatid: ID, modid: ID) {
 		this.formatid = formatid;
-		this.dex = formatid ? Dex.mod(formatid.slice(0, 4) as ID) : Dex;
+		this.dex = modid ? Dex.mod(modid) : formatid ? Dex.mod(formatid.slice(0, 4) as ID) : Dex;
 		this.ignoreEVLimits = (
 			this.dex.gen < 3 ||
 			(this.formatid.endsWith('hackmons') && this.dex.gen !== 6) ||

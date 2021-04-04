@@ -1041,6 +1041,7 @@ class Battle {
 	myAllyPokemon: ServerPokemon[] | null = null;
 	lastMove = '';
 
+	mod = '' as ID;
 	gen = 8;
 	dex: ModdedDex = Dex;
 	teamPreviewCount = 0;
@@ -1094,6 +1095,18 @@ class Battle {
 			this.scene = new BattleSceneStub();
 		} else {
 			throw new Error(`You must specify $frame and $logFrame simultaneously`);
+		}
+
+		const format = this.id.slice(this.id.indexOf('-') + 1, this.id.lastIndexOf('-'));
+		for (const mod in window.ModConfig) {
+			for (const formatid in window.ModConfig[mod].formats) {
+				if (format === formatid) {
+					this.mod = mod as ID;
+					this.dex = Dex.mod(mod as ID);
+					break;
+				}
+			}
+			if (this.mod) break;
 		}
 
 		this.paused = !!options.paused;
@@ -3360,7 +3373,7 @@ class Battle {
 		}
 		case 'gen': {
 			this.gen = parseInt(args[1], 10);
-			this.dex = Dex.forGen(this.gen);
+			this.dex = this.mod ? Dex.mod(this.mod) : Dex.forGen(this.gen);
 			this.scene.updateGen();
 			this.log(args);
 			break;
