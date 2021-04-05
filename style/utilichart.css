@@ -281,7 +281,7 @@
 	font-size: 8pt;
 	width: 488px;
 	height: 21px;
-	overflow: hidden;
+	overflow: visible;
 	color: #777777;
 }
 .utilichart .movedesccol {

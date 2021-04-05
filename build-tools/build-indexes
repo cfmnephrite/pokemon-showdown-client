@@ -1209,11 +1209,11 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 					const baseLsetNoEarlyGen = baseLearnsetEntry ? baseLearnsetEntry.replace(1, '').replace(2, '') : '';
 					if (newLearnsetEntry !== baseLearnsetEntry && newLearnsetEntry !== baseLsetNoEarlyGen) {
 						if (!overrideLearnsets[id]) overrideLearnsets[id] = {};
-						overrideLearnsets[id][moveid] = newLearnsetEntry;
+						overrideLearnsets[id][moveid] = (learnset[moveid][0] === 'X' ? 'r' : newLearnsetEntry);
 					}
 				}
 				for (const moveid in baseLearnset) {
-					if (baseLearnset[moveid] && !learnset[moveid]) {
+					if (baseLearnset[moveid] && (!learnset[moveid] || learnset[moveid][0] === 'X')) {
 						if (!overrideLearnsets[id]) overrideLearnsets[id] = {};
 						overrideLearnsets[id][moveid] = 'r';
 					}
@@ -1263,6 +1263,10 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 						if (!overrideMoveInfo[id]) overrideMoveInfo[id] = {};
 						overrideMoveInfo[id][key] = JSON.parse(modString);
 					}
+				}
+				if (baseEntry.isNonstandard && !modEntry.isNonstandard) {
+					if (!overrideMoveInfo[id]) overrideMoveInfo[id] = {};
+					overrideMoveInfo[id]['isNonstandard'] = false;
 				}
 			}
 			//abilities

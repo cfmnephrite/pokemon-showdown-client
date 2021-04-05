@@ -809,9 +809,10 @@ abstract class BattleTypedSearch<T extends SearchType> {
 				const overrideLearnsets = BattleTeambuilderTable[this.mod].overrideLearnsets;
 				if (overrideLearnsets[learnsetid] && overrideLearnsets[learnsetid][moveid]) learnset = overrideLearnsets[learnsetid];
 			}
-			if (learnset && (moveid in learnset) && learnset[moveid].includes(genChar)) {
+			if ((moveid in learnset) && learnset[moveid] === 'r')
+				return false;
+			if (learnset && (moveid in learnset) && learnset[moveid].includes(genChar))
 				return true;
-			}
 			learnsetid = this.nextLearnsetid(learnsetid, speciesid);
 		}
 		return false;
@@ -1495,6 +1496,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		let sketchMoves: string[] = [];
 		let sketch = false;
 		let gen = '' + dex.gen;
+		const forbiddenMoves: string[] = [];
 		while (learnsetid) {
 			let learnset = BattleTeambuilderTable.learnsets[learnsetid];
 			if (this.mod) {
@@ -1512,11 +1514,15 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 					/* if (requirePentagon && learnsetEntry.indexOf('p') < 0) {
 						continue;
 					} */
-					if (galarBornLegality && !learnsetEntry.includes('g')) {
-						continue;
-					} else if (!learnsetEntry.includes(gen)) {
+					if (learnsetEntry.includes('r') || forbiddenMoves.includes(moveid)) {
+						if (!forbiddenMoves.includes(moveid)) forbiddenMoves.push(moveid);
 						continue;
 					}
+					else if (galarBornLegality && !learnsetEntry.includes('g'))
+						continue;
+					else if (!learnsetEntry.includes(gen))
+						continue;
+
 					if (this.dex.gen >= 8 && this.dex.getMove(moveid) && this.dex.getMove(moveid).isNonstandard === 'Past' && this.formatType !== 'natdex') continue;
 					if (this.formatType?.startsWith('dlc1') && BattleTeambuilderTable['gen8dlc1']?.nonstandardMoves.includes(moveid)) continue;
 					if (moves.includes(moveid)) continue;
