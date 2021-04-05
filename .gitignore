@@ -2,6 +2,7 @@
 /audio/
 /config/*
 !/config/mod-config.js
+!/config/config.js
 /index.php
 /index.html
 /preactalpha.html
