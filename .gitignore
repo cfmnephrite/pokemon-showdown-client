@@ -3,6 +3,7 @@
 /config/*
 !/config/mod-config.js
 !/config/config.js
+!/config/testclient-key.js
 /index.php
 /index.html
 /preactalpha.html
